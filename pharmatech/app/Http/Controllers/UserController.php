@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facedes\Hash;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -15,6 +17,35 @@ class UserController extends Controller
     {
         //
     }
+    public function register(Request $request)
+    {
+        $user = User ::where('email',$request['email'])->first();
+        if($user)
+            
+      {  
+        $response['status']=0;
+        $response['message']='email already exists';
+        $response['code']=409;
+       }
+        else{
+            $user = User ::create([
+                'name' =>$request-> name,
+                'email'=>$request-> email,
+                'password'=>bcrypt($request->password),
+                'city'=>$request-> city,
+                'street'=>$request->street,
+               
+            ]);
+    
+            $response['status']=1;
+            $response['message']='done';
+            $response['code']=200;
+        }
+       
+        return response()->json($response);
+        
+    }
+
 
     /**
      * Show the form for creating a new resource.
